@@ -1,20 +1,14 @@
 cmake_minimum_required( VERSION 3.7.1 )
 
-project( tpc_google_mock C CXX )
+project( cmof_original C CXX )
 
 
 JMSD_SHOW_PROJECT_HEADER()
 
 
-include( ${JMSD_COMPONENT_CMAKE_SETTINGS_PATH}/tpc-google-mock-set-compiler-settings.cmake )
-set( JMSD_INCLUDED_PROJECT_HEADER_ROOT ${JMSD_COMPONENT_SOURCE_ROOT_PATH}/googletest/include )
-set( JMSD_INCLUDED_PROJECT_SOURCE_ROOT ${JMSD_COMPONENT_SOURCE_ROOT_PATH}/googletest/src )
-set( JMSD_THIS_PROJECT_HEADER_ROOT ${JMSD_COMPONENT_SOURCE_ROOT_PATH}/googlemock/include )
-set( JMSD_THIS_PROJECT_SOURCE_ROOT ${JMSD_COMPONENT_SOURCE_ROOT_PATH}/googlemock/src )
-
-list( APPEND ${PROJECT_NAME}_TEST_SOURCE_DIRS_VAR ${JMSD_COMPONENT_SOURCE_ROOT_PATH}/googletest/test )
-list( APPEND ${PROJECT_NAME}_TEST_SOURCE_DIRS_VAR ${JMSD_COMPONENT_SOURCE_ROOT_PATH}/googlemock/test )
-
+include( ${JMSD_COMPONENT_CMAKE_SETTINGS_PATH}/jmsd-testing-cmof-set-compiler-settings.cmake )
+set( JMSD_INCLUDED_PROJECT_ROOT ${JMSD_COMPONENT_SOURCE_ROOT_PATH}/cutf )
+set( JMSD_THIS_PROJECT_ROOT ${JMSD_COMPONENT_SOURCE_ROOT_PATH}/cmof )
 
 ## include dependencies
 set( ${PROJECT_NAME}_DEPENDENCY_DIRS_VAR
@@ -22,32 +16,24 @@ set( ${PROJECT_NAME}_DEPENDENCY_DIRS_VAR
 #	${tpc_google_test_DEPENDENCY_DIRS}
 	${JMSD_INCLUDED_PROJECT_HEADER_ROOT}
 	${JMSD_THIS_PROJECT_HEADER_ROOT}
-	${JMSD_COMPONENT_SOURCE_ROOT_PATH}/googletest
-	${JMSD_COMPONENT_SOURCE_ROOT_PATH}/googlemock )
+	${JMSD_COMPONENT_SOURCE_ROOT_PATH}/cutf
+	${JMSD_COMPONENT_SOURCE_ROOT_PATH}/cmof )
 list( REMOVE_DUPLICATES ${PROJECT_NAME}_DEPENDENCY_DIRS_VAR )
 include_directories( ${${PROJECT_NAME}_DEPENDENCY_DIRS_VAR} )
 
 
 ## this project headers and sources enumeration section
 file( GLOB_RECURSE header_and_source_files
-	${JMSD_INCLUDED_PROJECT_HEADER_ROOT}/*.h*
-	${JMSD_INCLUDED_PROJECT_HEADER_ROOT}/*.c*
-	${JMSD_INCLUDED_PROJECT_SOURCE_ROOT}/*.h*
-	${JMSD_INCLUDED_PROJECT_SOURCE_ROOT}/*.c*
-	${JMSD_THIS_PROJECT_HEADER_ROOT}/*.h*
-	${JMSD_THIS_PROJECT_HEADER_ROOT}/*.c*
-	${JMSD_THIS_PROJECT_SOURCE_ROOT}/*.h*
-	${JMSD_THIS_PROJECT_SOURCE_ROOT}/*.c* )
+	${JMSD_INCLUDED_PROJECT_ROOT}/*.h*
+	${JMSD_INCLUDED_PROJECT_ROOT}/*.c*
+	${JMSD_THIS_PROJECT_ROOT}/*.h*
+	${JMSD_THIS_PROJECT_ROOT}/*.c* )
 
 set( JMSD_THIS_PROJECT_FILES_TO_REMOVE
 	"gtest-type-util.h.pump"
-	"gtest-all.cc"
-	"gtest_main.cc"
 	"gmock-generated-actions.h.pump"
 	"gmock-generated-function-mockers.h.pump"
-	"gmock-generated-matchers.h.pump"
-	"gmock-all.cc"
-	"gmock_main.cc" )
+	"gmock-generated-matchers.h.pump" )
 JMSD_REMOVE_FILES_FROM_THE_LIST( header_and_source_files JMSD_THIS_PROJECT_FILES_TO_REMOVE )
 
 add_library( ${PROJECT_NAME} SHARED ${header_and_source_files} )
@@ -91,5 +77,4 @@ target_link_libraries( ${PROJECT_NAME} ${${PROJECT_NAME}_DEPENDENCY_LIBS_VAR} )
 
 ## Expose public includes to other subprojects through cache variable.
 include( ${JMSD_CMAKE_SETTINGS_PATH}/set-expose-dependencies.cmake )
-include( ${JMSD_CMAKE_SETTINGS_PATH}/set-expose-test-source-directories.cmake )
 JMSD_SHOW_PROJECT_FOOTER()

@@ -6,12 +6,12 @@ project( jmsd_tpc_google_test_and_mock )
 JMSD_SHOW_PROJECT_GROUP_HEADER()
 
 
-set( JMSD_COMPONENT_SOURCE_ROOT_PATH ${PROJECT_SOURCE_DIR}/_tpc_sources )
-set( JMSD_COMPONENT_CMAKE_SETTINGS_PATH ${PROJECT_SOURCE_DIR}/_tpc_cmake_settings )
+set( JMSD_COMPONENT_SOURCE_ROOT_PATH ${PROJECT_SOURCE_DIR}/sources )
+set( JMSD_COMPONENT_CMAKE_SETTINGS_PATH ${PROJECT_SOURCE_DIR}/_cmake_settings )
 
 
-#add_subdirectory( tpc_google_test )
-add_subdirectory( tpc_google_mock )
+#add_subdirectory( cutf )
+add_subdirectory( cmof )
 
 
 JMSD_SHOW_PROJECT_GROUP_FOOTER()
