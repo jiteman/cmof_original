@@ -9,27 +9,29 @@ JMSD_SHOW_PROJECT_HEADER()
 include( ${JMSD_COMPONENT_CMAKE_SETTINGS_PATH}/jmsd-testing-ctf-test-lib-set-compiler-settings.cmake )
 set( JMSD_THIS_PROJECT_SOURCE_ROOT ${JMSD_COMPONENT_SOURCE_ROOT_PATH}/ctf_test_lib )
 
+set( JMSD_THIS_PROJECT_SOURCE_CTF_TEST ${JMSD_THIS_PROJECT_SOURCE_ROOT}/gtest )
+set( JMSD_THIS_PROJECT_SOURCE_CTF_MOCK ${JMSD_THIS_PROJECT_SOURCE_ROOT}/gmock )
+
 
 ## include dependencies
 set( ${PROJECT_NAME}_DEPENDENCY_DIRS_VAR
 	${JMSD_PLATFORM_SOURCES}
 	${ctf_lib_original_DEPENDENCY_DIRS}
-	${JMSD_THIS_PROJECT_SOURCE_ROOT} )
+	${JMSD_THIS_PROJECT_SOURCE_ROOT}
+	${JMSD_THIS_PROJECT_SOURCE_CTF_TEST}
+	${JMSD_THIS_PROJECT_SOURCE_CTF_MOCK} )
 #	${JMSD_COMPONENT_SOURCE_ROOT_PATH} )
 list( REMOVE_DUPLICATES ${PROJECT_NAME}_DEPENDENCY_DIRS_VAR )
 include_directories( ${${PROJECT_NAME}_DEPENDENCY_DIRS_VAR} )
 
 
-## this project headers and sources enumeration section
-foreach( directory ${tpc_google_mock_TEST_SOURCE_DIRS} )
-	list( APPEND test_header_and_source_files ${directory}/*.h* )
-	list( APPEND test_header_and_source_files ${directory}/*.c* )
-endforeach()
-
 file( GLOB_RECURSE header_and_source_files
 	${JMSD_THIS_PROJECT_SOURCE_ROOT}/*.h*
 	${JMSD_THIS_PROJECT_SOURCE_ROOT}/*.c*
-	${test_header_and_source_files} )
+	${JMSD_THIS_PROJECT_SOURCE_CTF_TEST}/*.h*
+	${JMSD_THIS_PROJECT_SOURCE_CTF_TEST}/*.c*
+	${JMSD_THIS_PROJECT_SOURCE_CTF_MOCK}/*.h*
+	${JMSD_THIS_PROJECT_SOURCE_CTF_MOCK}/*.c* )
 
 set( JMSD_THIS_PROJECT_FILES_TO_REMOVE
 	"gtest_all_test.cc"
