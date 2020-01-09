@@ -1,19 +1,19 @@
 cmake_minimum_required( VERSION 3.7.1 )
 
-project( tpa_gtm_lib C CXX )
+project( ctf_lib_original C CXX )
 
 
 JMSD_SHOW_PROJECT_HEADER()
 
 
-include( ${JMSD_COMPONENT_CMAKE_SETTINGS_PATH}/tpa-gtm-lib-set-compiler-settings.cmake )
-set( JMSD_THIS_PROJECT_SOURCE_ROOT ${JMSD_COMPONENT_SOURCE_ROOT_PATH}/tpa_gtm )
+include( ${JMSD_COMPONENT_CMAKE_SETTINGS_PATH}/jmsd-testing-ctf-lib-set-compiler-settings.cmake )
+set( JMSD_THIS_PROJECT_SOURCE_ROOT ${JMSD_COMPONENT_SOURCE_ROOT_PATH}/ctf_lib )
 
 
 ## include dependencies
 set( ${PROJECT_NAME}_DEPENDENCY_DIRS_VAR
 	${JMSD_PLATFORM_SOURCES}
-	${tpc_google_mock_DEPENDENCY_DIRS}
+	${cmof_original_DEPENDENCY_DIRS}
 	${JMSD_THIS_PROJECT_SOURCE_ROOT} )
 list( REMOVE_DUPLICATES ${PROJECT_NAME}_DEPENDENCY_DIRS_VAR )
 include_directories( ${${PROJECT_NAME}_DEPENDENCY_DIRS_VAR} )
