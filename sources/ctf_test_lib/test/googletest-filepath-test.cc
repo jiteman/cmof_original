@@ -377,7 +377,7 @@ TEST(DirectoryTest, RootOfWrongDriveDoesNotExists) {
       non_drive[1] = ':';
       non_drive[2] = '\\';
       non_drive[3] = '\0';
-      EXPECT_FALSE(FilePath(non_drive).DirectoryExists());
+      EXPECT_FALSE(FilePath(non_drive).DirectoryExists()) << ::std::string( 1, drive );
       break;
     }
   _chdrive(saved_drive_);

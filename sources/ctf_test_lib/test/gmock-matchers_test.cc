@@ -68,6 +68,8 @@
 #include "gtest/gtest-spi.h"
 #include "gtest/gtest.h"
 
+#include "gtest/internal/gtest-internal.h"
+
 namespace testing {
 namespace gmock_matchers_test {
 namespace {
@@ -3231,17 +3233,17 @@ class FloatingPointNearTest : public FloatingPointTest<RawType> {
 };
 
 // Instantiate FloatingPointTest for testing floats.
-typedef FloatingPointTest<float> FloatTest;
+typedef FloatingPointTest<float> gmock_FloatTest;
 
-TEST_F(FloatTest, FloatEqApproximatelyMatchesFloats) {
+TEST_F(gmock_FloatTest, FloatEqApproximatelyMatchesFloats) {
   TestMatches(&FloatEq);
 }
 
-TEST_F(FloatTest, NanSensitiveFloatEqApproximatelyMatchesFloats) {
+TEST_F(gmock_FloatTest, NanSensitiveFloatEqApproximatelyMatchesFloats) {
   TestMatches(&NanSensitiveFloatEq);
 }
 
-TEST_F(FloatTest, FloatEqCannotMatchNaN) {
+TEST_F(gmock_FloatTest, FloatEqCannotMatchNaN) {
   // FloatEq never matches NaN.
   Matcher<float> m = FloatEq(nan1_);
   EXPECT_FALSE(m.Matches(nan1_));
@@ -3249,7 +3251,7 @@ TEST_F(FloatTest, FloatEqCannotMatchNaN) {
   EXPECT_FALSE(m.Matches(1.0));
 }
 
-TEST_F(FloatTest, NanSensitiveFloatEqCanMatchNaN) {
+TEST_F(gmock_FloatTest, NanSensitiveFloatEqCanMatchNaN) {
   // NanSensitiveFloatEq will match NaN.
   Matcher<float> m = NanSensitiveFloatEq(nan1_);
   EXPECT_TRUE(m.Matches(nan1_));
@@ -3257,7 +3259,7 @@ TEST_F(FloatTest, NanSensitiveFloatEqCanMatchNaN) {
   EXPECT_FALSE(m.Matches(1.0));
 }
 
-TEST_F(FloatTest, FloatEqCanDescribeSelf) {
+TEST_F(gmock_FloatTest, FloatEqCanDescribeSelf) {
   Matcher<float> m1 = FloatEq(2.0f);
   EXPECT_EQ("is approximately 2", Describe(m1));
   EXPECT_EQ("isn't approximately 2", DescribeNegation(m1));
@@ -3271,7 +3273,7 @@ TEST_F(FloatTest, FloatEqCanDescribeSelf) {
   EXPECT_EQ("is anything", DescribeNegation(m3));
 }
 
-TEST_F(FloatTest, NanSensitiveFloatEqCanDescribeSelf) {
+TEST_F(gmock_FloatTest, NanSensitiveFloatEqCanDescribeSelf) {
   Matcher<float> m1 = NanSensitiveFloatEq(2.0f);
   EXPECT_EQ("is approximately 2", Describe(m1));
   EXPECT_EQ("isn't approximately 2", DescribeNegation(m1));
@@ -3346,17 +3348,17 @@ TEST_F(FloatNearTest, NanSensitiveFloatNearCanMatchNaN) {
 }
 
 // Instantiate FloatingPointTest for testing doubles.
-typedef FloatingPointTest<double> DoubleTest;
+typedef FloatingPointTest<double> gmock_DoubleTest;
 
-TEST_F(DoubleTest, DoubleEqApproximatelyMatchesDoubles) {
+TEST_F(gmock_DoubleTest, DoubleEqApproximatelyMatchesDoubles) {
   TestMatches(&DoubleEq);
 }
 
-TEST_F(DoubleTest, NanSensitiveDoubleEqApproximatelyMatchesDoubles) {
+TEST_F(gmock_DoubleTest, NanSensitiveDoubleEqApproximatelyMatchesDoubles) {
   TestMatches(&NanSensitiveDoubleEq);
 }
 
-TEST_F(DoubleTest, DoubleEqCannotMatchNaN) {
+TEST_F(gmock_DoubleTest, DoubleEqCannotMatchNaN) {
   // DoubleEq never matches NaN.
   Matcher<double> m = DoubleEq(nan1_);
   EXPECT_FALSE(m.Matches(nan1_));
@@ -3364,7 +3366,7 @@ TEST_F(DoubleTest, DoubleEqCannotMatchNaN) {
   EXPECT_FALSE(m.Matches(1.0));
 }
 
-TEST_F(DoubleTest, NanSensitiveDoubleEqCanMatchNaN) {
+TEST_F(gmock_DoubleTest, NanSensitiveDoubleEqCanMatchNaN) {
   // NanSensitiveDoubleEq will match NaN.
   Matcher<double> m = NanSensitiveDoubleEq(nan1_);
   EXPECT_TRUE(m.Matches(nan1_));
@@ -3372,7 +3374,7 @@ TEST_F(DoubleTest, NanSensitiveDoubleEqCanMatchNaN) {
   EXPECT_FALSE(m.Matches(1.0));
 }
 
-TEST_F(DoubleTest, DoubleEqCanDescribeSelf) {
+TEST_F(gmock_DoubleTest, DoubleEqCanDescribeSelf) {
   Matcher<double> m1 = DoubleEq(2.0);
   EXPECT_EQ("is approximately 2", Describe(m1));
   EXPECT_EQ("isn't approximately 2", DescribeNegation(m1));
@@ -3386,7 +3388,7 @@ TEST_F(DoubleTest, DoubleEqCanDescribeSelf) {
   EXPECT_EQ("is anything", DescribeNegation(m3));
 }
 
-TEST_F(DoubleTest, NanSensitiveDoubleEqCanDescribeSelf) {
+TEST_F(gmock_DoubleTest, NanSensitiveDoubleEqCanDescribeSelf) {
   Matcher<double> m1 = NanSensitiveDoubleEq(2.0);
   EXPECT_EQ("is approximately 2", Describe(m1));
   EXPECT_EQ("isn't approximately 2", DescribeNegation(m1));
@@ -6880,12 +6882,31 @@ TEST_F(PredicateFormatterFromMatcherTest, ShortCircuitOnSuccess) {
   EXPECT_EQ(expect, result.message());
 }
 
+template< typename A_type >
+::std::string OfThisType() {
+
+#if GTEST_HAS_RTTI
+	::std::string const &type_name = ::testing::internal::GetTypeName< A_type >();
+
+	if ( IsReadableTypeName( type_name ) ) {
+		return " (of type " + type_name + ")";
+	}
+#endif
+
+	return "";
+}
+
+template< typename A_type >
+::std::string OfThisObject( A_type const & ) {
+	return OfThisType< A_type >();
+}
+
 TEST_F(PredicateFormatterFromMatcherTest, NoShortCircuitOnFailure) {
   AssertionResult result = RunPredicateFormatter(kAlwaysFail);
   EXPECT_FALSE(result);  // Implicit cast to bool.
   std::string expect =
       "Value of: dummy-name\nExpected: [DescribeTo]\n"
-      "  Actual: 1, [MatchAndExplain]";
+      "  Actual: 1" + OfThisObject( kAlwaysFail ) + ", [MatchAndExplain]";
   EXPECT_EQ(expect, result.message());
 }
 
@@ -6896,7 +6917,7 @@ TEST_F(PredicateFormatterFromMatcherTest, DetectsFlakyShortCircuit) {
       "Value of: dummy-name\nExpected: [DescribeTo]\n"
       "  The matcher failed on the initial attempt; but passed when rerun to "
       "generate the explanation.\n"
-      "  Actual: 2, [MatchAndExplain]";
+      "  Actual: 2" + OfThisObject( kFlaky )  + ", [MatchAndExplain]";
   EXPECT_EQ(expect, result.message());
 }
 
