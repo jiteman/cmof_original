@@ -33,9 +33,8 @@
 #include "gtest/internal/gtest-port.h"
 #include "gtest/gtest-message.h"
 
-#if GTEST_OS_WINDOWS_MOBILE
+#if GTEST_OS_WINDOWS
 # include <windows.h>
-#elif GTEST_OS_WINDOWS
 # include <direct.h>
 # include <io.h>
 #else
@@ -66,16 +65,8 @@ namespace internal {
 const char kPathSeparator = '\\';
 const char kAlternatePathSeparator = '/';
 const char kAlternatePathSeparatorString[] = "/";
-# if GTEST_OS_WINDOWS_MOBILE
-// Windows CE doesn't have a current directory. You should not use
-// the current directory in tests on Windows CE, but this at least
-// provides a reasonable fallback.
-const char kCurrentDirectoryString[] = "\\";
-// Windows CE doesn't define INVALID_FILE_ATTRIBUTES
-const DWORD kInvalidFileAttributes = 0xffffffff;
-# else
 const char kCurrentDirectoryString[] = ".\\";
-# endif  // GTEST_OS_WINDOWS_MOBILE
+const DWORD kInvalidFileAttributes = 0xffffffff;
 #else
 const char kPathSeparator = '/';
 const char kCurrentDirectoryString[] = "./";
@@ -203,10 +194,8 @@ FilePath FilePath::ConcatPaths(const FilePath& directory,
 // Returns true if pathname describes something findable in the file-system,
 // either a file, directory, or whatever.
 bool FilePath::FileOrDirectoryExists() const {
-#if GTEST_OS_WINDOWS_MOBILE
-  LPCWSTR unicode = String::AnsiToUtf16(pathname_.c_str());
-  const DWORD attributes = GetFileAttributes(unicode);
-  delete [] unicode;
+#if GTEST_OS_WINDOWS
+  const DWORD attributes = GetFileAttributes(pathname_.c_str());
   return attributes != kInvalidFileAttributes;
 #else
   posix::StatStruct file_stat;
@@ -227,10 +216,9 @@ bool FilePath::DirectoryExists() const {
   const FilePath& path(*this);
 #endif
 
-#if GTEST_OS_WINDOWS_MOBILE
-  LPCWSTR unicode = String::AnsiToUtf16(path.c_str());
-  const DWORD attributes = GetFileAttributes(unicode);
-  delete [] unicode;
+#if GTEST_OS_WINDOWS
+  const DWORD attributes = GetFileAttributes(path.c_str());
+
   if ((attributes != kInvalidFileAttributes) &&
       (attributes & FILE_ATTRIBUTE_DIRECTORY)) {
     result = true;
@@ -316,13 +304,13 @@ bool FilePath::CreateDirectoriesRecursively() const {
 // directory for any reason, including if the parent directory does not
 // exist. Not named "CreateDirectory" because that's a macro on Windows.
 bool FilePath::CreateFolder() const {
-#if GTEST_OS_WINDOWS_MOBILE
+#if GTEST_OS_WINDOWS
   FilePath removed_sep(this->RemoveTrailingPathSeparator());
-  LPCWSTR unicode = String::AnsiToUtf16(removed_sep.c_str());
-  int result = CreateDirectory(unicode, nullptr) ? 0 : -1;
-  delete [] unicode;
-#elif GTEST_OS_WINDOWS
-  int result = _mkdir(pathname_.c_str());
+
+  int result = CreateDirectory(removed_sep.c_str(), nullptr) ? 0 : -1;
+
+//#elif GTEST_OS_WINDOWS
+//  int result = _mkdir(pathname_.c_str());
 #elif GTEST_OS_ESP8266
   // do nothing
   int result = 0;
