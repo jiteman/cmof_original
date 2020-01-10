@@ -445,7 +445,7 @@ struct MockStackTraceGetter : testing::internal::OsStackTraceGetterInterface {
 
 // Tests that in opt mode, a positive stack_frames_to_skip argument is
 // treated as 0.
-TEST(LogTest, NoSkippingStackFrameInOptMode) {
+TEST(LogTest, DISABLED_NoSkippingStackFrameInOptMode) {
   MockStackTraceGetter* mock_os_stack_trace_getter = new MockStackTraceGetter;
   GetUnitTestImpl()->set_os_stack_trace_getter(mock_os_stack_trace_getter);
 

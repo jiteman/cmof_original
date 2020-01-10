@@ -42,7 +42,7 @@
 # include <string>
 # include <vector>
 
-# include "src/gtest-internal-inl.h"  // for UnitTestOptions
+#include "gtest/gtest-internal-inl.h" // for UnitTestOptions
 # include "test/googletest-param-test-test.h"
 
 using ::std::vector;

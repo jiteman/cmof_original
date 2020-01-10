@@ -94,7 +94,7 @@ TEST(XmlOutputTest, GetOutputFileFromDirectoryPath) {
 #endif
 }
 
-TEST(OutputFileHelpersTest, GetCurrentExecutableName) {
+TEST(OutputFileHelpersTest, DISABLED_GetCurrentExecutableName) {
   const std::string exe_str = GetCurrentExecutableName().string();
 #if GTEST_OS_WINDOWS
   const bool success =
