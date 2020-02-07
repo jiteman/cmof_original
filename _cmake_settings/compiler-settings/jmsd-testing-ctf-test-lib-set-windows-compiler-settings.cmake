@@ -15,7 +15,8 @@ if ( WIN32 )
 	list( APPEND ${PROJECT_NAME}_CXX_FLAGS "/wd5032" ) # detected #pragma warning(push) with no corresponding #pragma warning(pop)
 
 	# MSVC 2019
-	list( APPEND ${PROJECT_NAME}_CXX_FLAGS "/Wv:18" ) # warning C5056: operator '==': deprecated for array types; note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+	# note: to simplify migration, consider the temporary use of /Wv:18 flag with the version of the compiler with which you used to build without warnings
+	list( APPEND ${PROJECT_NAME}_CXX_FLAGS "/wd5056" ) # operator '==': deprecated for array types
 
 	string( REPLACE ";" " " ${PROJECT_NAME}_CXX_FLAGS_STR "${${PROJECT_NAME}_CXX_FLAGS}" )
 
